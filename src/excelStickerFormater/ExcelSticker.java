@@ -283,10 +283,6 @@ public class ExcelSticker {
         	int rows = ro_sheet.getRows();
         	int cols = ro_sheet.getColumns();
         	
-        	if (cols > TEMP_COLS){
-        		lblMsg.setText("內容格式錯誤,偵測到"+ cols + "個欄位; (資料欄位不得超過"+TEMP_COLS+"欄)");
-        		return;
-        	}
         	proj_count=0;
         	for (int r=2;r<rows;r++){
         		

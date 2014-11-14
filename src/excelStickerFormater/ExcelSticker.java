@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -39,6 +40,9 @@ import jxl.write.biff.RowsExceededException;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+
 public class ExcelSticker {
 	final static int HEADER_ROW =2;
 	final static int RMAX =50;
@@ -58,8 +62,8 @@ public class ExcelSticker {
 	JButton btnLoadData;
 	JButton btnLoadTemplate;
 	JButton btnGenerate;
-	
-	List<StickerClass> stList = null; 
+	JComboBox cbxColReadCount = new JComboBox();
+	List<ArrayList<String>> stList = null; 
 	
 	private int TEMP_COLS = 5;
 	private int TEMP_ROWS = 12;
@@ -86,43 +90,47 @@ public class ExcelSticker {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("\u751F\u7522\u8A08\u5283\u6A19\u7C64\u7522\u751F\u5668");
-		frame.setBounds(100, 100, 546, 404);
+		frame.setBounds(100, 100, 546, 426);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		final JFileChooser fc = new JFileChooser();
 		
 		txfDataPath = new JTextField();
-		txfDataPath.setBounds(210, 70, 314, 21);
+		txfDataPath.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		txfDataPath.setBounds(235, 119, 289, 21);
 		frame.getContentPane().add(txfDataPath);
 		txfDataPath.setColumns(10);
 		
 
 		
 		JLabel label = new JLabel("\u8A08\u756B\u6E05\u55AE");
-		label.setBounds(10, 143, 70, 15);
+		label.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		label.setBounds(10, 170, 70, 15);
 		frame.getContentPane().add(label);
 		
 		JLabel label_1 = new JLabel("\u8A08\u756B\u6578\u91CF:");
-		label_1.setBounds(178, 94, 61, 15);
+		label_1.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		label_1.setBounds(178, 143, 61, 15);
 		frame.getContentPane().add(label_1);
 		
 		lblCount = new JLabel("");
 		lblCount.setForeground(Color.MAGENTA);
 		lblCount.setFont(new Font("PMingLiU", Font.BOLD, 12));
 		lblCount.setHorizontalAlignment(SwingConstants.LEFT);
-		lblCount.setBounds(240, 93, 55, 15);
+		lblCount.setBounds(245, 143, 85, 15);
 		frame.getContentPane().add(lblCount);
 		
 		lblMsg = new JLabel("");
 		lblMsg.setFont(new Font("PMingLiU", Font.BOLD, 14));
 		lblMsg.setForeground(Color.RED);
-		lblMsg.setBounds(0, 344, 530, 21);
+		lblMsg.setBounds(0, 366, 530, 21);
 		frame.getContentPane().add(lblMsg);
 
 
 		
 		
-		btnLoadData = new JButton("2. 讀取計畫檔");
+		btnLoadData = new JButton("3. \u8B80\u53D6\u8A08\u756B\u6A94");
+		btnLoadData.setFont(new Font("PMingLiU", Font.PLAIN, 14));
 		btnLoadData.setEnabled(false);
 		btnLoadData.setHorizontalAlignment(SwingConstants.LEFT);
 		btnLoadData.addActionListener(new ActionListener() {
@@ -147,10 +155,11 @@ public class ExcelSticker {
 		        }
 			}
 		});
-		btnLoadData.setBounds(10, 71, 158, 40);
+		btnLoadData.setBounds(10, 120, 158, 40);
 		frame.getContentPane().add(btnLoadData);
 		
-		btnGenerate = new JButton("3. 產生標籤檔");
+		btnGenerate = new JButton("4. \u7522\u751F\u6A19\u7C64\u6A94");
+		btnGenerate.setFont(new Font("PMingLiU", Font.PLAIN, 14));
 		btnGenerate.setEnabled(false);
 		btnGenerate.setHorizontalAlignment(SwingConstants.LEFT);
 		btnGenerate.addActionListener(new ActionListener() {
@@ -159,30 +168,34 @@ public class ExcelSticker {
 				
 			}
 		});
-		btnGenerate.setBounds(10, 289, 158, 39);
+		btnGenerate.setBounds(14, 316, 158, 39);
 		frame.getContentPane().add(btnGenerate);
 		
 		JLabel label_2 = new JLabel("檔案");
-		label_2.setBounds(179, 74, 36, 15);
+		label_2.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		label_2.setBounds(179, 123, 36, 15);
 		frame.getContentPane().add(label_2);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 168, 510, 111);
+		scrollPane.setBounds(10, 195, 510, 111);
 		frame.getContentPane().add(scrollPane);
+		lstProject.setFont(new Font("PMingLiU", Font.PLAIN, 14));
 		
 		
 		scrollPane.setViewportView(lstProject);
 		
 		JButton btnExit = new JButton("離開");
+		btnExit.setFont(new Font("PMingLiU", Font.PLAIN, 14));
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		btnExit.setBounds(433, 289, 87, 39);
+		btnExit.setBounds(437, 316, 87, 39);
 		frame.getContentPane().add(btnExit);
 		
 		btnLoadTemplate = new JButton("1. 讀取空白標籤Excel");
+		btnLoadTemplate.setFont(new Font("PMingLiU", Font.PLAIN, 14));
 		btnLoadTemplate.setHorizontalAlignment(SwingConstants.LEFT);
 		btnLoadTemplate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -206,27 +219,42 @@ public class ExcelSticker {
 		        }				
 			}
 		});
-		btnLoadTemplate.setBounds(10, 21, 158, 40);
+		btnLoadTemplate.setBounds(10, 21, 179, 40);
 		frame.getContentPane().add(btnLoadTemplate);
 		
 		JLabel label_3 = new JLabel("規格:");
-		label_3.setBounds(175, 46, 36, 15);
+		label_3.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		label_3.setBounds(199, 44, 40, 15);
 		frame.getContentPane().add(label_3);
 		
 		lblFormat = new JLabel("");
 		lblFormat.setForeground(Color.MAGENTA);
 		lblFormat.setFont(new Font("PMingLiU", Font.BOLD, 12));
-		lblFormat.setBounds(210, 46, 85, 15);
+		lblFormat.setBounds(235, 44, 100, 15);
 		frame.getContentPane().add(lblFormat);
 		
 		JLabel label_4 = new JLabel("\u6A94\u6848");
-		label_4.setBounds(175, 27, 36, 15);
+		label_4.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		label_4.setBounds(199, 25, 40, 15);
 		frame.getContentPane().add(label_4);
 		
 		txfBlankPath = new JTextField();
+		txfBlankPath.setFont(new Font("PMingLiU", Font.PLAIN, 14));
 		txfBlankPath.setColumns(10);
-		txfBlankPath.setBounds(210, 23, 314, 21);
+		txfBlankPath.setBounds(235, 23, 289, 21);
 		frame.getContentPane().add(txfBlankPath);
+		
+
+		cbxColReadCount.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		cbxColReadCount.setModel(new DefaultComboBoxModel(new String[] {"5", "4", "3", "2", "1"}));
+		cbxColReadCount.setSelectedIndex(1);
+		cbxColReadCount.setBounds(186, 88, 80, 21);
+		frame.getContentPane().add(cbxColReadCount);
+		
+		JLabel label_5 = new JLabel("2. \u8A2D\u5B9A\u8B80\u53D6\u6B04\u4F4D\u6578");
+		label_5.setFont(new Font("PMingLiU", Font.PLAIN, 14));
+		label_5.setBounds(16, 91, 156, 15);
+		frame.getContentPane().add(label_5);
 		
 		
 	}
@@ -268,36 +296,38 @@ public class ExcelSticker {
         	//listModel = new DefaultListModel();
         	//lstProject = new JList(listModel);
         	
-        	stList = new ArrayList<StickerClass>();
+        	ArrayList<String> entry = new ArrayList<String>(); //each entry has multiple columns
+        	
+        	stList = new ArrayList<ArrayList<String>>();
         	
         	Cell cell = null;
         	
         	ro_sheet = ro_data_workbook.getSheet(0);
-        	
-        	String sno = ""; //系統號
-        	String snoa = ""; //縮號
-        	String pcount = "";//株數
-        	String src = ""; //來源
-        	String note = ""; //備註
         	
         	int rows = ro_sheet.getRows();
         	int cols = ro_sheet.getColumns();
         	
         	proj_count=0;
         	for (int r=2;r<rows;r++){
+        		String dataString = "";
+        		entry  = new ArrayList<String>();
         		
         		//read rows
         		Cell crow[] = ro_sheet.getRow(r);
-        		sno = crow[0].getContents();
-        		snoa = crow[1].getContents();
-        		pcount = crow[2].getContents();
-        		src = crow[3].getContents();
-        		note = crow[4].getContents();
+        		
+        		//read columns 
+        		for (int cidx=0; cidx < Integer.valueOf((String)cbxColReadCount.getSelectedItem()); cidx++){
+        			entry.add(crow[cidx].getContents());
+        			dataString = dataString + crow[cidx].getContents() + " ; ";
+        		}
         		        		
-        		if (sno.length() != 0){
+        		if (entry.size() > 0){
         			proj_count++;
-        			listModel.addElement(proj_count+": " +sno+" ; " + snoa + " ; " + pcount + " ; " + src + " ; " + note);
-        			stList.add(new StickerClass(sno, snoa, pcount, src, note));
+        			listModel.addElement(proj_count + ": " + dataString);
+        			stList.add(entry);
+        		}
+        		else{
+        			lblMsg.setText("資料檔讀取異常, 請聯絡#2716");
         		}
         	}
         	
@@ -321,22 +351,6 @@ public class ExcelSticker {
 		public int col=0;
 		
 		public IndexClass(){}
-	}
-	
-	public class StickerClass{
-    	public String sno = ""; //系統號
-    	public String snoa = ""; //縮號
-    	public String pcount = "";//株數
-    	public String src = ""; //來源
-    	public String note = ""; //備註
-    	
-    	public StickerClass(String _sno, String _snoa, String _pcount, String _src, String _note){
-    		this.sno = _sno;
-    		this.snoa = _snoa;
-    		this.pcount = _pcount;
-    		this.src = _src;
-    		this.note = _note;
-    	}
 	}
 	
 	private IndexClass getIndex(int projnum){
@@ -408,13 +422,26 @@ public class ExcelSticker {
 		
 		System.out.println("sheetCount:"+ sheetList.size());
 		
-		StickerClass st = null;
-		String brk = "\n";
+		
+		ArrayList<String> entry1 = stList.get(1);
+		System.out.println("rec1:" + entry1.get(0));
+		ArrayList<String> entry2 = stList.get(2);
+		System.out.println("rec2:" + entry2.get(0));
+		
+		String brk = "\r\n";
 		for (int pc=1; pc<=proj_count; pc++){
-			//String data = "abc"+"\012"+"def"+"\012"+"ghi"+"\012";
-			st = stList.get(pc-1);
-			String data = st.sno + brk + st.snoa + brk + st.pcount + brk + st.src + brk + st.note; 
+			ArrayList<String> entry = stList.get(pc-1); //each entry has multiple columns
+			String data = "";
+			
+			for (int cidx=0; cidx < entry.size(); cidx++){
+				if (cidx < entry.size()-1){
+					data = data + entry.get(cidx) + brk;
+				}else{
+					data = data + entry.get(cidx);
+				}
+			}
 
+			
 			idx = getIndex(pc);
 			
 			System.out.println(pc+".  p:" + idx.page + "  r:" + idx.row + "  c:" +idx.col);
@@ -433,7 +460,7 @@ public class ExcelSticker {
 			
 			WritableCell  c = sheetList.get(idx.page-1).getWritableCell(idx.row, idx.col);
 			//if (c.getType()== CellType.EMPTY){
-				System.out.println("it's empty");
+				//System.out.println("it's empty");
 				Label l = new Label(idx.col,idx.row, data, arial10format);
 				try {
 					sheetList.get(idx.page-1).addCell(l);
@@ -465,5 +492,4 @@ public class ExcelSticker {
 		
 		
 	}
-	
 }
